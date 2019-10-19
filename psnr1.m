@@ -5,8 +5,8 @@ function PSNR=psnr1(i,j)
 %I=im2double(i);
 %J=im2double(j);
 error =imsubtract(i,j);
-MSE= mean(error(:).^2)
-PSNR = 10 * log10(255^2 / MSE)
+MSE= mean(error(:).^2);
+PSNR = 10 * log10(255^2 / MSE);
 %PSNR = round(PSNR*100)/100
 
  

@@ -8,8 +8,12 @@ start_time=cputime;
 file_name='Lena256.jpg';
 original_image=imread(file_name);
 
+
 cover_object1=imread(file_name);
 %cover_object1=rgb2gray(cover_object1);
+figure;
+imshow(cover_object1);title('Original image (before watermark and compression)');
+
 cover_object=im2double(cover_object1);
 
 % determine size of cover image
@@ -114,19 +118,27 @@ dct_watermark(1,1)=val;
 %Take the inverse DCT
 watermarked_image=idct2(dct_watermark);
 
+
 % convert to uint8 and write the watermarked image out to a file
 watermarked_image_int=im2uint8(watermarked_image);
 imwrite(watermarked_image_int,'dct_fuzzy.bmp','bmp');
 
 % display processing time
 elapsed_time=cputime-start_time,
+figure;
+imshow(watermarked_image);title('Watermarked image (after watermark added to image)');
+%imshow(watermarked_image,[])
 
-imshow(watermarked_image,[])
-
-i=original_image;;
+i=original_image;
 j=imread('dct_fuzzy.bmp');
-psnr1(i,j);
-ssim(i,j)
+psnr_var=psnr1(original_image,watermarked_image_int);
+ssim_var=ssim(i,j);
+disp('PSNR of Original and Watermarked image')
+disp(psnr_var)
+disp('SSIM of Original and Watermarked image')
+disp(ssim_var)
+
+
 dlmwrite('dct_fuzzywatermark.txt',watermark);
 dlmwrite('dct_fuzzyrow.txt',row);
 dlmwrite('dct_fuzzycol.txt',col);
@@ -201,6 +213,14 @@ for i1=[1:8:row]
     end
 end
 
+figure;
+imshow(dct_quantized);title('Quantized image while jpeg compression');
+
+
+%Transmit image 
+
+
+
 %-----------------------------------------------------------
 % Jpeg Decoding 
 %-----------------------------------------------------------
@@ -234,8 +254,10 @@ K=mat2gray(I2);
 %----------------------------------------------------------
 %Display of Results
 %----------------------------------------------------------
-figure(1);imshow(I1);title('original image');
-figure(2);imshow(K);title('restored image from dct');
+figure;
+imshow(I1);title('Image before jpeg compression')
+figure;
+imshow(K);title('Restored image after Jpeg decompression');
 
 %-------------------------------------------------------------------------------------
 %DECODING THE IMAGE AND COMPARING BOTH PIXEL VALUES by cox method
@@ -255,14 +277,26 @@ watermark_n(1,1)=0; %dc component is unchanged
 SIM=sum(watermark.*watermark_n)/sqrt(sum(watermark.*watermark_n)); 
 SIM
 
-i=original_image;
-I2=im2double(I2)
+
+decompressed_img=im2uint8(K);
 j=I2; %Restored image from jpeg compression : line 231
-psnr1(i,j);
-ssim(i,j)
-dlmwrite('dct_fuzzywatermark.txt',watermark);
-dlmwrite('dct_fuzzyrow.txt',row);
-dlmwrite('dct_fuzzycol.txt',col);
+
+%psnr1(i,j);
+%ssim(i,j);
+
+psnr_var=psnr1(watermarked_image_int,decompressed_img);
+ssim_var=ssim(watermarked_image_int,decompressed_img);
+disp('PSNR of Watermarked and Decompressed img')
+disp(psnr_var)
+disp('SSIM of Watermarked and Decompressed img')
+disp(ssim_var)
+
+psnr_var=psnr1(original_image,decompressed_img);
+ssim_var=ssim(original_image,decompressed_img);
+disp('PSNR of Original and Decompressed img')
+disp(psnr_var)
+disp('SSIM of Original and Decompressed img')
+disp(ssim_var)
 
 % display processing time
 elapsed_time=cputime-start_time,

@@ -351,6 +351,17 @@ SIM_ORIGNAL_WATERMARKED(frame_no)=SIM;
 frame_no = frame_no+1;
 end
 
+% Play new video of watermarked frames
+implay(mov)
+
+%wrtie the new video into a movie .avi file
+v = VideoWriter('w_video.avi');
+open(v)
+writeVideo(v,mov)
+close(v)
+
+
+
 SIM
 SIM_ORIGNAL_WATERMARKED
 PSNR_ORIGNAL_WATERMARKED
