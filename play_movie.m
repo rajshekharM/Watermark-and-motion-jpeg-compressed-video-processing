@@ -1,6 +1,6 @@
-%implay(mov)
+implay(mov)
 
 v = VideoWriter('newfile.avi');
 open(v)
-writeVideo(v,K_array)
+writeVideo(v,mov)
 close(v)
